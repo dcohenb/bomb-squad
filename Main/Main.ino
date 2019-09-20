@@ -1,4 +1,6 @@
 #include <Adafruit_NeoPixel.h>
+#include <LCDWIKI_GUI.h> // Core graphics library
+#include <LCDWIKI_SPI.h> // Hardware-specific library
 
 #define GAME_ROUND_TIME 300000 // 5 minutes in milliseconds
 // #define GAME_ROUND_TIME 10000 // 5 minutes in milliseconds
@@ -11,10 +13,12 @@ void setup() {
   clockSetup();
   strikeSetup();
   passwordSetup();
+  keypadSetup();
 }
 
 void loop() {
   passwordLoop();
+  keypadLoop();
   
   roundSecondsLeft = ((GAME_ROUND_TIME - millis()) / 1000);
 
