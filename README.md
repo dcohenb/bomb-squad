@@ -4,7 +4,7 @@ This is a repo for our Geekcon 2019 project - "Bomb Squad"
 ## Installing the `arduino-cli` on mac:
 ```sh
 # Installing the CLI
-sudo curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=~/usr/local/bin sh
+sudo curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 
 ### RESTART THE SHELL HERE ###
 
