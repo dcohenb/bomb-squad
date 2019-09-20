@@ -66,12 +66,11 @@ void initState() {
 void initSlots() {
   String letters = "abcdefghijklmnopqrstuvwxyz";
   for (int i = 0; i < chosenWord.length(); ++i) {
-    letters.remove(chosenWord[i] - 'a', 1);
+    letters.replace(String(chosenWord[i]), "");
   }
 
   for (int i = 0; i < chosenWord.length(); ++i) {
     String currLetters = String(letters);
-    currLetters.remove(chosenWord[i] - 'a', 1);
     for (int j = 0; j < LETTER_SLOT_SIZE; ++j) {
       char letterIndex = random(currLetters.length());
       char currLetter = currLetters[letterIndex];
