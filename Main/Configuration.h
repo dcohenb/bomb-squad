@@ -3,6 +3,14 @@
 #define SUCCESS_PIXELS_PIN  51
 #define CLOCK_PIXELS_PIN    52
 #define BUZZER_PIN          53
+#define RANDOM_SEED_PIN     0
+
+// Buzzer Sounds
+#define STRIKE_BUZZER_FREQ     100
+#define STRIKE_BUZZER_DURATION 1000
+#define CLOCK_1_BUZZER_FREQ    1000
+#define CLOCK_2_BUZZER_FREQ    900
+#define CLOCK_BUZZER_DURATION  100
 
 // Keypad Module
 const int KEYPAD_BUTTONS[4] = {
@@ -39,6 +47,9 @@ const int PASSWORD_BUTTONS[11] = {
 #define  BLACK   0x0000
 #define  RED     0xF800
 #define  GREEN   0x0F80
+
+// State Machine
+#define  SUCCESS_NEEDED 3
 
 
 

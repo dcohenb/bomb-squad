@@ -105,6 +105,7 @@ void _onPasswordButtonDown(int btnNumber){
   printCurrWord();
   switch (btnNumber) {
     case 0:
+      addStrike();
       cyclicHandler(0, 1);
       break;
     case 1:
