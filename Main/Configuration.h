@@ -6,17 +6,17 @@
 
 // Keypad Module
 const int KEYPAD_BUTTONS[4] = {
-  2, // KEYPAD_BTN_1
-  3, // KEYPAD_BTN_2
-  4, // KEYPAD_BTN_3
-  5  // KEYPAD_BTN_4
+  22, // KEYPAD_BTN_1
+  23, // KEYPAD_BTN_2
+  24, // KEYPAD_BTN_3
+  25  // KEYPAD_BTN_4
 };
 
-#define KEYPAD_LCD_CS   8   // Chip Select SPI pin (Might be called SS) - Wire this to pin 10 on an Arduino Pro Mini
-#define KEYPAD_LCD_RST  9    // Reset pin - I use 9 on my Pro Mini
-#define KEYPAD_LCD_CD   10
-#define KEYPAD_LCD_SDA  11   // if you use the hardware spi,this pin is no need to set - Wire this to pin 11, MOSI, on a Pro Mini
-#define KEYPAD_LCD_SCK  12     //if you use the hardware spi,this pin is no need to set - Wire to pin 13 on a Pro Mini
+#define KEYPAD_LCD_CS   26   // Chip Select SPI pin (Might be called SS) - Wire this to pin 10 on an Arduino Pro Mini
+#define KEYPAD_LCD_RST  27    // Reset pin - I use 9 on my Pro Mini
+#define KEYPAD_LCD_CD   28
+#define KEYPAD_LCD_SDA  29   // if you use the hardware spi,this pin is no need to set - Wire this to pin 11, MOSI, on a Pro Mini
+#define KEYPAD_LCD_SCK  30     //if you use the hardware spi,this pin is no need to set - Wire to pin 13 on a Pro Mini
 
 
 // Password Module

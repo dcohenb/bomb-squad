@@ -79,12 +79,13 @@ String getCurrWord() {
 }
 
 void passwordLoop() {
+  // Buttons
   static int lastButtonsStates[PASSWORD_BUTTONS_ARRAY_LENGTH] = {};
   
   for(int i = 0; i < PASSWORD_BUTTONS_ARRAY_LENGTH; i++) {
     int buttonState = digitalRead(PASSWORD_BUTTONS[i]) == LOW ? HIGH : LOW;
     if(buttonState != lastButtonsStates[i]) {
-      if(buttonState == LOW) _onPasswordButtonDown(i);
+      if(buttonState == HIGH) _onPasswordButtonDown(i);
       lastButtonsStates[i] = buttonState;
     }
   }
