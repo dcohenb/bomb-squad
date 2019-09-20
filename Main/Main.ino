@@ -6,8 +6,10 @@
 // #define GAME_ROUND_TIME 10000 // 5 minutes in milliseconds
 
 int roundSecondsLeft = GAME_ROUND_TIME;
+const int RANDOM_PIN = 0;
 
 void setup() {
+  randomSeed(analogRead(RANDOM_PIN));
   Serial.begin(9600);
   
   clockSetup();
