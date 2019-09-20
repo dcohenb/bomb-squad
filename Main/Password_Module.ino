@@ -18,8 +18,6 @@ const String PASSWORDS[35] = {"about","after","again","below","could",
                               "these","thing","think","three","water",
                               "where","which","world","would","write"};
 
-const int RANDOM_PIN = 0;
-
 const int BUTTON_ARRAY_LENGTH = sizeof(BUTTONS) / sizeof(BUTTONS[0]);
 
 const int LETTER_SLOT_SIZE = 5;
@@ -32,8 +30,9 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 String chosenWord = "";
 
+bool isActive = false;
+
 void passwordSetup() {
-  randomSeed(analogRead(RANDOM_PIN));
 
   for(int i = 0; i < 11; i++) {
     pinMode(BUTTONS[i], INPUT_PULLUP);
@@ -48,6 +47,7 @@ void passwordSetup() {
   initState();
   initSlots();
   lcd.print(getCurrWord());
+  isActive = true;
 }
 
 void initWord() {
@@ -100,11 +100,13 @@ void passwordLoop() {
 }
 
 void cyclicHandler(int slot, int direction, int max = 4) {
-  slotState[slot] += direction;
-  if (slotState[slot] > max) {
-    slotState[slot] = 0;
-  } else if (slotState[slot] < 0) {
-    slotState[slot] = max;
+  if (isActive) {
+    slotState[slot] += direction;
+    if (slotState[slot] > max) {
+      slotState[slot] = 0;
+    } else if (slotState[slot] < 0) {
+      slotState[slot] = max;
+    }
   }
 }
 
@@ -141,8 +143,26 @@ void _onPasswordButtonDown(int btnNumber){
     case 9:
       cyclicHandler(4, -1);
       break;
+    case 10:
+      isActive = false;
+      if (!checkCurrCorrect()) {
+        addStrike();
+      }
+      break;
   }
 
   Serial.println("Curr State:");
   Serial.println(getCurrWord());
+}
+
+bool checkCurrCorrect() {
+  bool passed = true;
+  for (int i = 0; i < 5; ++i) {
+    if (slotState[i] != 0) {
+      passed = false;
+      break;
+    }
+  }
+
+  return passed;
 }
