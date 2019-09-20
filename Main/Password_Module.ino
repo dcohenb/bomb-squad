@@ -31,10 +31,8 @@ void passwordSetup() {
 
   lcd.begin(16,2);
   lcd.backlight();
-  lcd.setCursor(0,0);
   initWord();
   lcd.print(chosenWord);
-  lcd.setCursor(0,1);
   initState();
   initSlots();
   printCurrWord();
@@ -57,7 +55,7 @@ void initState() {
 void initSlots() {
   String letters = "abcdefghijklmnopqrstuvwxyz";
   for (int i = 0; i < chosenWord.length(); ++i) {
-    letters.replace(chosenWord[i], "");
+    letters.replace(String(chosenWord[i]), "");
   }
 
   for (int i = 0; i < chosenWord.length(); ++i) {
