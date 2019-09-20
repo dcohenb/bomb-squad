@@ -39,6 +39,9 @@ void passwordSetup() {
   initSlots();
   lcd.print(getCurrWord());
   isActive = true;
+
+  Serial.println(getCurrWord());
+  Serial.println(chosenWord);
 }
 
 void initWord() {
@@ -79,13 +82,12 @@ String getCurrWord() {
 }
 
 void passwordLoop() {
-  // Buttons
-  static int lastButtonsStates[PASSWORD_BUTTONS_ARRAY_LENGTH] = {};
-  
-  for(int i = 0; i < PASSWORD_BUTTONS_ARRAY_LENGTH; i++) {
-    int buttonState = digitalRead(PASSWORD_BUTTONS[i]) == LOW ? HIGH : LOW;
+  static int lastButtonsStates[11] = {};
+
+  for(int i = 0; i < 11; i++) {
+    int buttonState = digitalRead(BUTTONS[i]) == LOW ? HIGH : LOW;
     if(buttonState != lastButtonsStates[i]) {
-      if(buttonState == HIGH) _onPasswordButtonDown(i);
+      if(buttonState == LOW) _onPasswordButtonDown(i);
       lastButtonsStates[i] = buttonState;
     }
   }
