@@ -1,15 +1,6 @@
 #include <Wire.h>  
 #include <LiquidCrystal_I2C.h>
 
-const int BUTTONS[11] = {
-  12, /* PASSWORD_BTN_01 */ 11, /* PASSWORD_BTN_02 */
-  10, /* PASSWORD_BTN_03 */ 9 , /* PASSWORD_BTN_04 */
-  8 , /* PASSWORD_BTN_05 */ 7 , /* PASSWORD_BTN_06 */
-  6 , /* PASSWORD_BTN_07 */ 5 , /* PASSWORD_BTN_08 */
-  4 , /* PASSWORD_BTN_09 */ 3 , /* PASSWORD_BTN_10 */
-                 13 /* SUBMIT_BTN */
-};
-
 const String PASSWORDS[35] = {"about","after","again","below","could",
                               "every","first","found","great","house",
                               "large","learn","never","other","place",
@@ -18,7 +9,7 @@ const String PASSWORDS[35] = {"about","after","again","below","could",
                               "these","thing","think","three","water",
                               "where","which","world","would","write"};
 
-const int BUTTON_ARRAY_LENGTH = sizeof(BUTTONS) / sizeof(BUTTONS[0]);
+
 
 const int LETTER_SLOT_SIZE = 5;
 
@@ -35,7 +26,7 @@ bool isActive = false;
 void passwordSetup() {
 
   for(int i = 0; i < 11; i++) {
-    pinMode(BUTTONS[i], INPUT_PULLUP);
+    pinMode(PASSWORD_BUTTONS[i], INPUT_PULLUP);
   }
 
   lcd.begin(16,2);
@@ -88,15 +79,15 @@ String getCurrWord() {
 }
 
 void passwordLoop() {
-//  static int lastButtonsStates[11] = {};
-//  
-//  for(int i = 0; i < 11; i++) {
-//    int buttonState = digitalRead(BUTTONS[i]) == LOW ? HIGH : LOW;
-//    if(buttonState != lastButtonsStates[i]) {
-//      if(buttonState == LOW) _onPasswordButtonDown(i);
-//      lastButtonsStates[i] = buttonState;
-//    }
-//  }
+  static int lastButtonsStates[PASSWORD_BUTTONS_ARRAY_LENGTH] = {};
+  
+  for(int i = 0; i < PASSWORD_BUTTONS_ARRAY_LENGTH; i++) {
+    int buttonState = digitalRead(PASSWORD_BUTTONS[i]) == LOW ? HIGH : LOW;
+    if(buttonState != lastButtonsStates[i]) {
+      if(buttonState == LOW) _onPasswordButtonDown(i);
+      lastButtonsStates[i] = buttonState;
+    }
+  }
 }
 
 void cyclicHandler(int slot, int direction, int max = 4) {

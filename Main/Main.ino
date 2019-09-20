@@ -1,3 +1,4 @@
+#include "Configuration.h"
 #include <Adafruit_NeoPixel.h>
 #include <LCDWIKI_GUI.h> // Core graphics library
 #include <LCDWIKI_SPI.h> // Hardware-specific library

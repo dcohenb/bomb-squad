@@ -1,5 +1,5 @@
-#define CLOCK_PIXELS_PIN 22
 #define CLOCK_PIXELS_NUM 37
+
 Adafruit_NeoPixel _clockPixels(CLOCK_PIXELS_NUM, CLOCK_PIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 const int _clockNumbers[4][10][7] = {
