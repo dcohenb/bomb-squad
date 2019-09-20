@@ -37,7 +37,7 @@ void passwordSetup() {
   lcd.setCursor(0,1);
   initState();
   initSlots();
-  lcd.print(getCurrWord());
+  printCurrWord();
   isActive = true;
 
   Serial.println(getCurrWord());
@@ -78,6 +78,13 @@ String getCurrWord() {
     word[i] = letterSlots[i][slotState[i]];
   }
   return word;
+}
+
+void printCurrWord() {
+  for (int i = 0; i < 5; ++i) {
+    lcd.setCursor(i * 2 + 1, 0);
+    lcd.print(letterSlots[i][slotState[i]]);
+  }
 }
 
 void passwordLoop() {
