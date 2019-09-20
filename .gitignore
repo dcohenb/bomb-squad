@@ -1,2 +1,1 @@
-*.elf
-*.hex
+build/*.elf
