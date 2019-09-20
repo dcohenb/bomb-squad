@@ -37,7 +37,9 @@ void gameLoose() {
   setClockNumbers(0);
 }
 
-
+void moduleSuccess(int moduleNumber) {
+  
+}
 
 void buttonsLoop(int pinArray[], void (*callback)(int btnNumber)) {
   static int lastButtonsPinStates[54] = {};
