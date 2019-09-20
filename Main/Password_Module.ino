@@ -37,8 +37,11 @@ void passwordSetup() {
   lcd.setCursor(0,1);
   initState();
   initSlots();
-  lcd.print(getCurrWord());
+  printCurrWord();
   isActive = true;
+
+  Serial.println(getCurrWord());
+  Serial.println(chosenWord);
 }
 
 void initWord() {
@@ -54,12 +57,11 @@ void initState() {
 void initSlots() {
   String letters = "abcdefghijklmnopqrstuvwxyz";
   for (int i = 0; i < chosenWord.length(); ++i) {
-    letters.remove(chosenWord[i] - 'a', 1);
+    letters.replace(chosenWord[i], "");
   }
 
   for (int i = 0; i < chosenWord.length(); ++i) {
     String currLetters = String(letters);
-    currLetters.remove(chosenWord[i] - 'a', 1);
     for (int j = 0; j < LETTER_SLOT_SIZE; ++j) {
       char letterIndex = random(currLetters.length());
       char currLetter = currLetters[letterIndex];
@@ -76,6 +78,14 @@ String getCurrWord() {
     word[i] = letterSlots[i][slotState[i]];
   }
   return word;
+}
+
+void printCurrWord() {
+  lcd.clear();
+  for (int i = 0; i < 5; ++i) {
+    lcd.setCursor(i * 2 + 1, 0);
+    lcd.print(letterSlots[i][slotState[i]]);
+  }
 }
 
 void passwordLoop() {
@@ -95,6 +105,7 @@ void cyclicHandler(int slot, int direction, int max = 4) {
 
 void _onPasswordButtonDown(int btnNumber){
   Serial.println("Password Button down, number: " + String(btnNumber));
+  printCurrWord();
   switch (btnNumber) {
     case 0:
       cyclicHandler(0, 1);
@@ -130,6 +141,8 @@ void _onPasswordButtonDown(int btnNumber){
       isActive = false;
       if (!checkCurrCorrect()) {
         addStrike();
+      } else {
+        moduleSuccess(0);
       }
       break;
   }
