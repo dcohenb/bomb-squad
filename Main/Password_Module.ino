@@ -32,7 +32,6 @@ void passwordSetup() {
   lcd.begin(16,2);
   lcd.backlight();
   initWord();
-  lcd.print(chosenWord);
   initState();
   initSlots();
   printCurrWord();
