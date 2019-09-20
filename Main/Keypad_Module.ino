@@ -5,7 +5,6 @@ LCDWIKI_SPI mylcd(SSD1283A, KEYPAD_LCD_CS, KEYPAD_LCD_CD, -1, KEYPAD_LCD_SDA, KE
 int images[4] = {};
 int selected[4] = {0, 0, 0, 0};
 bool screenRendered = false;
-
 int sequences[6][7] = {
   {9, 21, 11, 12, 17, 19, 5},
   {24, 9, 5, 7, 10, 19, 2},
@@ -24,16 +23,33 @@ void keypadSetup() {
   mylcd.Fill_Screen(WHITE);
 
   // select random sequence
-  // int sequence[7] = random(KEYPAD_IMAGES_ARRAY_LENGTH);
-//  for(int i = 0; i < 4; i++) {
-//    images[i] = random(KEYPAD_IMAGES_ARRAY_LENGTH);  
-//  }
+  int selectedSequence = random(KEYPAD_IMAGES_ARRAY_LENGTH);
+  int skipped = 0;
+  for(int i = 0; i < 4; i++) {
+    images[i] = sequences[selectedSequence][i];  
+  }
   
   renderKeypadScreen(); // Initial Render
 }
 
-void keypadLoop() {
-  buttonsLoop(KEYPAD_BUTTONS, _onKeypadButtonDown);
+void keypadLoop() {  
+
+  Serial.println(
+    String(images[0]) + "," +
+    String(images[1]) + "," +
+    String(images[2]) + "," +
+    String(images[3])
+  );
+  
+  static int lastButtonsState[KEYPAD_BUTTONS_ARRAY_LENGTH] = {};
+  
+  for(int i = 0; i < KEYPAD_BUTTONS_ARRAY_LENGTH; i++) {
+    int buttonState = digitalRead(KEYPAD_BUTTONS[i]) == LOW ? HIGH : LOW;
+    if(buttonState != lastButtonsState[i]) {
+      if(buttonState == HIGH) _onKeypadButtonDown(i);
+      lastButtonsState[i] = buttonState;
+    }
+  }
 }
 
 void _onKeypadButtonDown(int btnNumber){
@@ -45,6 +61,8 @@ void _onKeypadButtonDown(int btnNumber){
 } 
 
 void renderKeypadScreen() {
+  Serial.println("renderKeypadScreen");
+  
   // Cross
   mylcd.Set_Draw_color(BLACK);
   mylcd.Draw_Line(0, 64, 129, 64);
@@ -67,23 +85,15 @@ void renderKeypadScreen() {
 }
 
 void _drawKeypadImage(int imageNumber, int cellRow, int cellCol) {
-//    mylcd.Set_Text_colour(BLACK);
-//    mylcd.Set_Text_Size(3);
-//    mylcd.Print_String(String(imageNumber), row * 64 + 30, col * 64 + 10);
-
-  Serial.println("DRAW IMAGE: " + String(imageNumber));
+  mylcd.Set_Text_colour(BLACK);
+  mylcd.Set_Text_Size(3);
+  mylcd.Print_String(String(imageNumber), cellRow * 64 + 20, cellCol * 64 + 20);
   
-  for(int row = 0; row < 32; row++) {
-    // Serial.println("");
-    for(int col = 0; col < 32; col++) {
-      
-      // Serial.print(String(  bitRead(KEYPAD_IMAGES[imageNumber][row], col)  ));
-      // Serial.print(String(  KEYPAD_IMAGES[imageNumber][row] ));
-      
-      if(bitRead(KEYPAD_IMAGES[imageNumber][row], 32 - col) == 1) {
-        mylcd.Draw_Pixel(col + (cellCol * 64 + 16), row + (cellRow * 64 + 23));
-      }
-      
-    }
-  }
+//  for(int row = 0; row < 32; row++) {
+//    for(int col = 0; col < 32; col++) {
+//      if(bitRead(KEYPAD_IMAGES[imageNumber][row], 32 - col) == 1) {
+//        mylcd.Draw_Pixel(col + (cellCol * 64 + 16), row + (cellRow * 64 + 23));
+//      }
+//    }
+//  }
 }
