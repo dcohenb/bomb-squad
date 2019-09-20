@@ -85,15 +85,15 @@ void renderKeypadScreen() {
 }
 
 void _drawKeypadImage(int imageNumber, int cellRow, int cellCol) {
-  mylcd.Set_Text_colour(BLACK);
-  mylcd.Set_Text_Size(3);
-  mylcd.Print_String(String(imageNumber), cellRow * 64 + 20, cellCol * 64 + 20);
-  
-//  for(int row = 0; row < 32; row++) {
-//    for(int col = 0; col < 32; col++) {
-//      if(bitRead(KEYPAD_IMAGES[imageNumber][row], 32 - col) == 1) {
-//        mylcd.Draw_Pixel(col + (cellCol * 64 + 16), row + (cellRow * 64 + 23));
-//      }
-//    }
-//  }
+//  mylcd.Set_Text_colour(BLACK);
+//  mylcd.Set_Text_Size(3);
+//  mylcd.Print_String(String(imageNumber), cellRow * 64 + 20, cellCol * 64 + 20);
+
+  for(int row = 0; row < 32; row++) {
+    for(int col = 0; col < 32; col++) {
+      if(bitRead(KEYPAD_IMAGES[imageNumber][row], 32 - col) == 1) {
+        mylcd.Draw_Pixel(col + (cellCol * 64 + 16), row + (cellRow * 64 + 23));
+      }
+    }
+  }
 }
