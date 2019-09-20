@@ -33,16 +33,7 @@ void keypadSetup() {
 }
 
 void keypadLoop() {
-  // Buttons
-  static int lastButtonsStates[KEYPAD_BUTTONS_ARRAY_LENGTH] = {};
-  
-  for(int i = 0; i < KEYPAD_BUTTONS_ARRAY_LENGTH; i++) {
-    int buttonState = digitalRead(KEYPAD_BUTTONS[i]) == LOW ? HIGH : LOW;
-    if(buttonState != lastButtonsStates[i]) {
-      if(buttonState == HIGH) _onKeypadButtonDown(i);
-      lastButtonsStates[i] = buttonState;
-    }
-  }
+  buttonsLoop(KEYPAD_BUTTONS, _onKeypadButtonDown);
 }
 
 void _onKeypadButtonDown(int btnNumber){
