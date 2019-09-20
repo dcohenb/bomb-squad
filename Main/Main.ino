@@ -36,3 +36,20 @@ void loop() {
 void gameLoose() {
   setClockNumbers(0);
 }
+
+
+
+void buttonsLoop(int pinArray[], void (*callback)(int btnNumber)) {
+  static int lastButtonsPinStates[54] = {};
+  
+  for(int i = 0; i < sizeof(pinArray) / sizeof(pinArray[0]); i++) {
+    int btnPinNumber = pinArray[i];
+    int buttonState = digitalRead(btnPinNumber) == LOW ? HIGH : LOW;
+    if(buttonState != lastButtonsPinStates[btnPinNumber]) {
+      if(buttonState == HIGH) {
+        callback(i);
+      }
+      lastButtonsPinStates[btnPinNumber] = buttonState;
+    }
+  }  
+}
