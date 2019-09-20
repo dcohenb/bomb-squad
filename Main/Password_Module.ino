@@ -143,7 +143,6 @@ void _onPasswordButtonDown(int btnNumber){
       cyclicHandler(4, -1);
       break;
     case 10:
-      isActive = false;
       if (!checkCurrCorrect()) {
         addStrike();
       } else {
