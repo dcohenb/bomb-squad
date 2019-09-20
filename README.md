@@ -21,7 +21,7 @@ arduino-cli core install arduino:avr
 arduino-cli lib install "Adafruit NeoPixel"
 
 # Compile the sketch (and get the hex file)
-arduino-cli compile -b arduino:avr:mega -o build/bomb_squad Bomb_Squad.ino
+arduino-cli compile -b arduino:avr:mega -o build/bomb_squad src/Bomb_Squad.ino
 
 # Upload the sketch to the board (replace the port with the board you got from the board list)
 arduino-cli upload -p /dev/cu.usbmodem1421301 -b arduino:avr:mega -i build/bomb_squad
