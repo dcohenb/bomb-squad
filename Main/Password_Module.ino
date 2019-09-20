@@ -86,7 +86,15 @@ void printCurrWord() {
 }
 
 void passwordLoop() {
-  buttonsLoop(PASSWORD_BUTTONS, _onPasswordButtonDown);
+  static int lastButtonsState[PASSWORD_BUTTONS_ARRAY_LENGTH] = {};
+  
+  for(int i = 0; i < PASSWORD_BUTTONS_ARRAY_LENGTH; i++) {
+    int buttonState = digitalRead(PASSWORD_BUTTONS[i]) == LOW ? HIGH : LOW;
+    if(buttonState != lastButtonsState[i]) {
+      if(buttonState == HIGH) _onPasswordButtonDown(i);
+      lastButtonsState[i] = buttonState;
+    }
+  }
 }
 
 void cyclicHandler(int slot, int direction, int max = 4) {

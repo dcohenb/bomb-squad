@@ -4,7 +4,6 @@
 #include <LCDWIKI_SPI.h> // Hardware-specific library
 
 #define GAME_ROUND_TIME 300000 // 5 minutes in milliseconds
-// #define GAME_ROUND_TIME 10000 // 5 minutes in milliseconds
 
 enum moduleState {
   neutral,
@@ -69,19 +68,4 @@ void gameWin() {
 void moduleSuccess(int moduleNumber) {
   gameState[moduleNumber] = success;
   successModules++;
-}
-
-void buttonsLoop(int pinArray[], void (*callback)(int btnNumber)) {
-  static int lastButtonsPinStates[54] = {};
-  
-  for(int i = 0; i < sizeof(pinArray) / sizeof(pinArray[0]); i++) {
-    int btnPinNumber = pinArray[i];
-    int buttonState = digitalRead(btnPinNumber) == LOW ? HIGH : LOW;
-    if(buttonState != lastButtonsPinStates[btnPinNumber]) {
-      if(buttonState == HIGH) {
-        callback(i);
-      }
-      lastButtonsPinStates[btnPinNumber] = buttonState;
-    }
-  }  
 }
