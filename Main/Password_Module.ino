@@ -39,6 +39,9 @@ void passwordSetup() {
   initSlots();
   printCurrWord();
   isActive = true;
+
+  Serial.println(getCurrWord());
+  Serial.println(chosenWord);
 }
 
 void initWord() {
@@ -54,12 +57,11 @@ void initState() {
 void initSlots() {
   String letters = "abcdefghijklmnopqrstuvwxyz";
   for (int i = 0; i < chosenWord.length(); ++i) {
-    letters.remove(chosenWord[i] - 'a', 1);
+    letters.replace(String(chosenWord[i]), "");
   }
 
   for (int i = 0; i < chosenWord.length(); ++i) {
     String currLetters = String(letters);
-    currLetters.remove(chosenWord[i] - 'a', 1);
     for (int j = 0; j < LETTER_SLOT_SIZE; ++j) {
       char letterIndex = random(currLetters.length());
       char currLetter = currLetters[letterIndex];
@@ -86,7 +88,15 @@ void printCurrWord() {
 }
 
 void passwordLoop() {
-  buttonsLoop(PASSWORD_BUTTONS, _onPasswordButtonDown);
+  static int lastButtonsStates[11] = {};
+
+  for(int i = 0; i < 11; i++) {
+    int buttonState = digitalRead(BUTTONS[i]) == LOW ? HIGH : LOW;
+    if(buttonState != lastButtonsStates[i]) {
+      if(buttonState == LOW) _onPasswordButtonDown(i);
+      lastButtonsStates[i] = buttonState;
+    }
+  }
 }
 
 void cyclicHandler(int slot, int direction, int max = 4) {
