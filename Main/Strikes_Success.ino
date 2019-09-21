@@ -15,6 +15,15 @@ void strikeSetup() {
   _successPixels.show();
 }
 
+void lightLoop() {
+  for (int i = 0; i < 3; ++i) {
+    if (gameState[i] == success) {
+      _successPixels.fill(_strikesPixels.Color(0, 150, 0), i, 1);
+    }
+  }
+  _successPixels.show();
+}
+
 void addStrike() {
   strikes++;
   _strikesPixels.clear();
@@ -28,11 +37,11 @@ void addStrike() {
 
 void gameLostLights(){
   _successPixels.clear();
-  _successPixels.fill(_successPixels.Color(150, 0, 0), 0, SUCCESS_PIXELS_NUM);
+  _successPixels.fill(_successPixels.Color(150, 0, 0), 3, SUCCESS_PIXELS_NUM);
   _successPixels.show();
 }
 void gameWonLights(){
   _successPixels.clear();
-  _successPixels.fill(_successPixels.Color(0, 150, 0), 0, SUCCESS_PIXELS_NUM);
+  _successPixels.fill(_successPixels.Color(0, 150, 0), 3, SUCCESS_PIXELS_NUM);
   _successPixels.show();
 }

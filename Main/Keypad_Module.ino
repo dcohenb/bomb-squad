@@ -4,6 +4,7 @@ LCDWIKI_SPI mylcd(SSD1283A, KEYPAD_LCD_CS, KEYPAD_LCD_CD, -1, KEYPAD_LCD_SDA, KE
 
 int images[4];
 int indices[4];
+int mutableIndices[4];
 
 int selected[4] = {0, 0, 0, 0};
 bool screenRendered = false;
@@ -40,7 +41,8 @@ void keypadSetup() {
       mutableSequences[selectedSequence][currIndex] = '\0';
     }
   }
-  
+  memcpy(mutableIndices, indices, 4 * 4);
+
   Serial.println(
     String(images[0]) + "," +
     String(images[1]) + "," +
@@ -53,14 +55,15 @@ void keypadSetup() {
 int findSmallest() {
   int smallest = 9999;
   for (int i = 0; i < 4; ++i) {
-    if (indices[i] < smallest) {
-      smallest = indices[i];
+    if (mutableIndices[i] < smallest) {
+      smallest = mutableIndices[i];
     }
   }
 
   return smallest;
 }
 
+int lastKeypadButtonsState[KEYPAD_BUTTONS_ARRAY_LENGTH];
 void keypadLoop() {  
 
   // Serial.println(
@@ -70,13 +73,12 @@ void keypadLoop() {
   //   String(images[3])
   // );
   
-  static int lastButtonsState[KEYPAD_BUTTONS_ARRAY_LENGTH] = {};
   
   for(int i = 0; i < KEYPAD_BUTTONS_ARRAY_LENGTH; i++) {
     int buttonState = digitalRead(KEYPAD_BUTTONS[i]) == LOW ? HIGH : LOW;
-    if(buttonState != lastButtonsState[i]) {
+    if(buttonState != lastKeypadButtonsState[i]) {
       if(buttonState == HIGH) _onKeypadButtonDown(i);
-      lastButtonsState[i] = buttonState;
+      lastKeypadButtonsState[i] = buttonState;
     }
   }
 }
@@ -85,13 +87,16 @@ void _onKeypadButtonDown(int btnNumber){
   Serial.println("Keypad down, number: " + String(btnNumber));
 
   Serial.println(String(findSmallest()));
-  Serial.println(String(indices[btnNumber]));
-  if (indices[btnNumber] == findSmallest()) {
-    indices[btnNumber] += 1000;
+  Serial.println(String(mutableIndices[btnNumber]));
+  if (mutableIndices[btnNumber] == findSmallest()) {
+    mutableIndices[btnNumber] += 1000;
     selected[btnNumber] = 1;
   } else {
     addStrike();
-    selected[btnNumber] = -1;
+    for (int i = 0; i < 4; ++i) {
+      selected[i] = 0;
+      mutableIndices[i] = indices[i];
+    }
   }
 
   renderKeypadScreen();

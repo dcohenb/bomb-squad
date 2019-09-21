@@ -15,18 +15,19 @@ int lastRoundSecondsLeft = GAME_ROUND_TIME;
 bool gameLost = false;
 int strikes = 0;
 
-moduleState gameState[3] = {neutral, neutral, neutral};
+moduleState gameState[3] = {neutral, success, neutral};
 int successModules = 0;
 
 void setup() {
   randomSeed(analogRead(RANDOM_SEED_PIN));
   Serial.begin(9600);
-  
+  pinMode(SMALL_VIBRATOR_1_PIN, OUTPUT);
+  pinMode(SMALL_VIBRATOR_2_PIN, OUTPUT);
+
   clockSetup();
   strikeSetup();
   passwordSetup();
   keypadSetup();
-  gameWonLights();
 }
 
 void loop() {
@@ -37,6 +38,7 @@ void loop() {
     } else if (successModules < SUCCESS_NEEDED) {
       passwordLoop();
       keypadLoop();
+      lightLoop();
       
       roundSecondsLeft = ((GAME_ROUND_TIME - ((millis() - 2000) * (strikes * 2 + 1))) / 1000);
 
@@ -53,6 +55,7 @@ void loop() {
   } else {
     buzzLoop();
     delay(1200);
+    unBuzz();
   }
 }
 
