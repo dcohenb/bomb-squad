@@ -2,7 +2,9 @@
 
 LCDWIKI_SPI mylcd(SSD1283A, KEYPAD_LCD_CS, KEYPAD_LCD_CD, -1, KEYPAD_LCD_SDA, KEYPAD_LCD_RST, KEYPAD_LCD_SCK, -1); // Tell the lib what pins we are using
 
-int images[4] = {};
+int images[4];
+int indices[4];
+
 int selected[4] = {0, 0, 0, 0};
 bool screenRendered = false;
 int sequences[6][7] = {
@@ -23,23 +25,50 @@ void keypadSetup() {
   mylcd.Fill_Screen(WHITE);
 
   // select random sequence
+  int mutableSequences[6][7];
+  memcpy(mutableSequences, sequences, 4 * 6 * 7);
   int selectedSequence = random(KEYPAD_IMAGES_ARRAY_LENGTH);
   int skipped = 0;
   for(int i = 0; i < 4; i++) {
-    images[i] = sequences[selectedSequence][i];  
+    int currIndex = random(7);
+    int currElement = mutableSequences[selectedSequence][currIndex];
+    if (currElement == '\0') {
+      i--;
+    } else {
+      images[i] = currElement;  
+      indices[i] = currIndex;  
+      mutableSequences[selectedSequence][currIndex] = '\0';
+    }
   }
   
-  renderKeypadScreen(); // Initial Render
-}
-
-void keypadLoop() {  
-
   Serial.println(
     String(images[0]) + "," +
     String(images[1]) + "," +
     String(images[2]) + "," +
     String(images[3])
   );
+  renderKeypadScreen(); // Initial Render
+}
+
+int findSmallest() {
+  int smallest = 9999;
+  for (int i = 0; i < 4; ++i) {
+    if (indices[i] < smallest) {
+      smallest = indices[i];
+    }
+  }
+
+  return smallest;
+}
+
+void keypadLoop() {  
+
+  // Serial.println(
+  //   String(images[0]) + "," +
+  //   String(images[1]) + "," +
+  //   String(images[2]) + "," +
+  //   String(images[3])
+  // );
   
   static int lastButtonsState[KEYPAD_BUTTONS_ARRAY_LENGTH] = {};
   
@@ -55,7 +84,15 @@ void keypadLoop() {
 void _onKeypadButtonDown(int btnNumber){
   Serial.println("Keypad down, number: " + String(btnNumber));
 
-  selected[btnNumber] = 1;
+  Serial.println(String(findSmallest()));
+  Serial.println(String(indices[btnNumber]));
+  if (indices[btnNumber] == findSmallest()) {
+    indices[btnNumber] += 1000;
+    selected[btnNumber] = 1;
+  } else {
+    addStrike();
+    selected[btnNumber] = -1;
+  }
 
   renderKeypadScreen();
 } 
@@ -76,7 +113,7 @@ void renderKeypadScreen() {
       _drawKeypadImage(images[index], row, col);
 
       // Indicator
-      mylcd.Set_Draw_color(selected[index] == 1 ? GREEN : BLACK);
+      mylcd.Set_Draw_color(selected[index] == 1 ? GREEN : selected[index] == -1 ? RED : BLACK);
       mylcd.Fill_Rectangle(col * 64 + 32 - 10, row * 64 + 3, col * 64 + 32 + 10, row * 64 + 13); // indicator light
 
       index++;
