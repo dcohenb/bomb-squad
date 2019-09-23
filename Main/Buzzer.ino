@@ -15,18 +15,12 @@ void buzzStrike() {
 }
 
 void buzzClock() {
-  if (lastRoundSecondsLeft != roundSecondsLeft) {
-    alternateClock = !alternateClock;
-    if (alternateClock) {
-      tone(BUZZER_PIN, CLOCK_1_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
-      tone(PIEZZO_PIN, CLOCK_1_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
-    } else {
-      tone(BUZZER_PIN, CLOCK_2_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
-      tone(PIEZZO_PIN, CLOCK_2_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
-    }
+  alternateClock = !alternateClock;
+  if (alternateClock) {
+    tone(BUZZER_PIN, CLOCK_1_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
+    tone(PIEZZO_PIN, CLOCK_1_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
+  } else {
+    tone(BUZZER_PIN, CLOCK_2_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
+    tone(PIEZZO_PIN, CLOCK_2_BUZZER_FREQ, CLOCK_BUZZER_DURATION);
   }
-}
-
-void unBuzz() {
-  noTone(BUZZER_PIN);
 }

@@ -24,11 +24,6 @@ String chosenWord = "";
 bool isActive = false;
 
 void passwordSetup() {
-
-  for(int i = 0; i < 11; i++) {
-    pinMode(PASSWORD_BUTTONS[i], INPUT_PULLUP);
-  }
-
   lcd.begin(16,2);
   lcd.backlight();
   initWord();
@@ -79,22 +74,17 @@ String getCurrWord() {
 
 void printCurrWord() {
   lcd.clear();
-  for (int i = 0; i < 5; ++i) {
-    lcd.setCursor(i * 3, 0);
-    lcd.print(letterSlots[i][slotState[i]]);
-  }
-}
 
-int lastPasswordButtonsState[PASSWORD_BUTTONS_ARRAY_LENGTH];
-void passwordLoop() {
-  
-  for(int i = 0; i < PASSWORD_BUTTONS_ARRAY_LENGTH; i++) {
-    int buttonState = digitalRead(PASSWORD_BUTTONS[i]);
-    if(buttonState != lastPasswordButtonsState[i]) {
-      if(buttonState == LOW) _onPasswordButtonDown(i);
-      lastPasswordButtonsState[i] = buttonState;
-    }
-  }
+  lcd.setCursor(0, 0);
+  lcd.print(letterSlots[0][slotState[0]]);
+  lcd.setCursor(3, 0);
+  lcd.print(letterSlots[1][slotState[1]]);
+  lcd.setCursor(7, 0);
+  lcd.print(letterSlots[2][slotState[2]]);
+  lcd.setCursor(11, 0);
+  lcd.print(letterSlots[3][slotState[3]]);
+  lcd.setCursor(15, 0);
+  lcd.print(letterSlots[4][slotState[4]]);
 }
 
 void cyclicHandler(int slot, int direction, int max = 4) {
@@ -108,7 +98,7 @@ void cyclicHandler(int slot, int direction, int max = 4) {
   }
 }
 
-void _onPasswordButtonDown(int btnNumber){
+void onPasswordButtonDown(int btnNumber){
   Serial.println("Password Button down, number: " + String(btnNumber));
   switch (btnNumber) {
     case 0:
@@ -157,7 +147,7 @@ void _onPasswordButtonDown(int btnNumber){
 
 bool checkCurrCorrect() {
   bool passed = true;
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 4; ++i) {
     if (slotState[i] != 0) {
       passed = false;
       break;

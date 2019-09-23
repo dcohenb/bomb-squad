@@ -8,46 +8,53 @@ int mutableIndices[4];
 
 int selected[4] = {0, 0, 0, 0};
 bool screenRendered = false;
-int sequences[6][7] = {
+#define TOTAL_SEQUENCES 5
+int sequences[TOTAL_SEQUENCES][7] = {
   {9, 21, 11, 12, 17, 19, 5},
   {24, 9, 5, 7, 10, 19, 2},
   {0, 18, 7, 15, 23, 11, 10},
   {1, 3, 13, 17, 15, 2, 14},
   {6, 14, 13, 4, 3, 26, 27},
-  {1, 24, 8, 22, 6, 25, 16}
+  // {1, 24, 8, 22, 6, 25, 16}
 };
 
 void keypadSetup() {
-  for(int i = 0; i < sizeof(KEYPAD_BUTTONS); i++) {
-    pinMode(KEYPAD_BUTTONS[i], INPUT_PULLUP);
-  }
-
   mylcd.Init_LCD();
   mylcd.Fill_Screen(WHITE);
 
   // select random sequence
-  int mutableSequences[6][7];
-  memcpy(mutableSequences, sequences, 4 * 6 * 7);
-  int selectedSequence = random(KEYPAD_IMAGES_ARRAY_LENGTH);
+  int mutableSequences[TOTAL_SEQUENCES][7];
+  memcpy(mutableSequences, sequences, 4 * TOTAL_SEQUENCES * 7);
+  int selectedSequence = random(TOTAL_SEQUENCES);
+  Serial.println("selectedSequence: " + String(selectedSequence));
   int skipped = 0;
   for(int i = 0; i < 4; i++) {
+    // images[i] = sequences[selectedSequence][i]; continue; // Debug select first 4
     int currIndex = random(7);
     int currElement = mutableSequences[selectedSequence][currIndex];
-    if (currElement == '\0') {
+    if (currElement == -1) {
       i--;
     } else {
       images[i] = currElement;  
       indices[i] = currIndex;  
-      mutableSequences[selectedSequence][currIndex] = '\0';
+      mutableSequences[selectedSequence][currIndex] = -1;
     }
   }
   memcpy(mutableIndices, indices, 4 * 4);
 
   Serial.println(
+    "IMAGES: " +
     String(images[0]) + "," +
     String(images[1]) + "," +
     String(images[2]) + "," +
     String(images[3])
+  );
+  Serial.println(
+    "BUTTONS: " +
+    String(indices[0]) + "," +
+    String(indices[1]) + "," +
+    String(indices[2]) + "," +
+    String(indices[3])
   );
   renderKeypadScreen(); // Initial Render
 }
@@ -63,27 +70,7 @@ int findSmallest() {
   return smallest;
 }
 
-int lastKeypadButtonsState[KEYPAD_BUTTONS_ARRAY_LENGTH];
-void keypadLoop() {  
-
-  // Serial.println(
-  //   String(images[0]) + "," +
-  //   String(images[1]) + "," +
-  //   String(images[2]) + "," +
-  //   String(images[3])
-  // );
-  
-  
-  for(int i = 0; i < KEYPAD_BUTTONS_ARRAY_LENGTH; i++) {
-    int buttonState = digitalRead(KEYPAD_BUTTONS[i]) == LOW ? HIGH : LOW;
-    if(buttonState != lastKeypadButtonsState[i]) {
-      if(buttonState == HIGH) _onKeypadButtonDown(i);
-      lastKeypadButtonsState[i] = buttonState;
-    }
-  }
-}
-
-void _onKeypadButtonDown(int btnNumber){
+void onKeypadButtonDown(int btnNumber){
   Serial.println("Keypad down, number: " + String(btnNumber));
 
   Serial.println(String(findSmallest()));
@@ -91,6 +78,15 @@ void _onKeypadButtonDown(int btnNumber){
   if (mutableIndices[btnNumber] == findSmallest()) {
     mutableIndices[btnNumber] += 1000;
     selected[btnNumber] = 1;
+
+    bool finished = true;
+    for (int i = 0; i < 4; ++i) {
+      if(selected[i] == 0) {
+        finished = false;
+        break;
+      }
+    }
+    if(finished) moduleSuccess(2);
   } else {
     addStrike();
     for (int i = 0; i < 4; ++i) {
@@ -102,9 +98,7 @@ void _onKeypadButtonDown(int btnNumber){
   renderKeypadScreen();
 } 
 
-void renderKeypadScreen() {
-  Serial.println("renderKeypadScreen");
-  
+void renderKeypadScreen() { 
   // Cross
   mylcd.Set_Draw_color(BLACK);
   mylcd.Draw_Line(0, 64, 129, 64);

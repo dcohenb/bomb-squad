@@ -72,6 +72,6 @@ void setClockNumbers(int number) {
 void _setClockNumber(int pos, int number) {
   for(int i = 0; i < 7; i++) {
     if(_clockNumbers[pos][number][i] < 0) continue;
-    _clockPixels.setPixelColor(_clockNumbers[pos][number][i], _clockPixels.Color(100, 0, 0));
+    _clockPixels.setPixelColor(_clockNumbers[pos][number][i], 70, 0, 0);
   }
 }
